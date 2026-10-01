@@ -1,0 +1,36 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "drone-mission-planner"
+version = "1.0.0"
+description = "Multirotor mission planner: leg computation, polygon geofence checks, and energy feasibility with reserve margins"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Sajid Kabir Saji" }]
+requires-python = ">=3.10"
+dependencies = []
+keywords = ["uav", "drone", "mission-planning", "geofence", "aerospace"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+[project.urls]
+Homepage = "https://github.com/sajidkabir/drone-mission-planner"
+Repository = "https://github.com/sajidkabir/drone-mission-planner"
+Issues = "https://github.com/sajidkabir/drone-mission-planner/issues"
+Changelog = "https://github.com/sajidkabir/drone-mission-planner/blob/main/CHANGELOG.md"
+
+[project.scripts]
+mission-planner = "drone_mission_planner.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/drone_mission_planner"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
