@@ -3,6 +3,7 @@
 [![CI](https://github.com/sajidkabir/drone-mission-planner/actions/workflows/ci.yml/badge.svg)](https://github.com/sajidkabir/drone-mission-planner/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23077815.svg)](https://doi.org/10.5281/zenodo.23077815)
 
 A multirotor mission planner and feasibility checker. Give it a mission as
 a list of waypoints and it answers the three questions that matter before
@@ -234,6 +235,14 @@ not move the validated numbers without explaining why in the PR.
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
+
+## Citation
+
+If you use this project in research, please cite the archived release:
+
+Sajid Kabir Saji (2026). drone-mission-planner (v1.0.1) [Software]. Zenodo. https://doi.org/10.5281/zenodo.23077816
+
+The concept DOI https://doi.org/10.5281/zenodo.23077815 always resolves to the latest version.
 
 ## License
 
