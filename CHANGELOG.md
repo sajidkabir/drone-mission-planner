@@ -4,6 +4,29 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/), and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [1.1.0] - 2026-10-06
+
+### Added
+
+- MAVLink mission exporter: `to_qgc_wpl` / `write_qgc_wpl` write the
+  planner's mission as a QGroundControl waypoint file (`QGC WPL 110`),
+  readable by QGroundControl and Mission Planner and flyable on ArduPilot
+  and PX4. Home row, takeoff to the first waypoint's altitude, one
+  waypoint row per planner waypoint (`loiter` becomes
+  `MAV_CMD_NAV_LOITER_TIME` with the hold seconds), and a land row at the
+  last waypoint. Altitudes export relative to the launch point
+  (`MAV_FRAME_GLOBAL_RELATIVE_ALT`).
+- `mission-planner export mission.json [-o out.waypoints]` CLI
+  subcommand.
+- `tests/test_export.py`: 16 checks covering the header, the row mapping,
+  loiter seconds, the photo-waypoint limitation, empty-mission rejection,
+  and the CLI.
+
+### Notes
+
+- `photo` waypoints export as plain waypoints: no camera trigger command
+  is written, because trigger configuration is outside the planner model.
+
 ## [1.0.0] - 2026-10-01
 
 First stable release.

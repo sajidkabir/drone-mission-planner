@@ -33,6 +33,7 @@ Python standard library.
 - **Plain-text report**: the leg table, the geofence result, and the
   energy verdict in one page a human can read in the field.
 - **CLI**: `mission-planner check mission.json` prints the report;
+  `mission-planner export mission.json` writes a QGC `.waypoints` file;
   `mission-planner demo` runs the bundled Dhaka survey mission.
 
 ## Installation
@@ -99,6 +100,32 @@ Check your own mission file (the same mission ships as
 mission-planner check examples/dhaka_survey.json
 mission-planner check my_mission.json --reserve 0.30
 ```
+
+### Exporting to MAVLink
+
+A planned mission can be written as a QGroundControl waypoint file
+(`QGC WPL 110`), which QGroundControl and Mission Planner both open and
+which ArduPilot and PX4 autopilots accept over MAVLink:
+
+```bash
+mission-planner export examples/dhaka_survey.json -o dhaka_survey.waypoints
+```
+
+The mapping from planner waypoints to mission items:
+
+| Planner | Exported item |
+|---|---|
+| First waypoint | Home position (row 0), then a takeoff climbing to its altitude |
+| Waypoint (`none`, `photo`) | `MAV_CMD_NAV_WAYPOINT` at its position and altitude |
+| Waypoint (`loiter`, `loiter_s`) | `MAV_CMD_NAV_LOITER_TIME` holding for `loiter_s` seconds |
+| Last waypoint | `MAV_CMD_NAV_LAND` at its position |
+
+Altitudes are exported relative to the launch point
+(`MAV_FRAME_GLOBAL_RELATIVE_ALT`); the planner never records a launch
+elevation, so absolute altitudes are not available. `photo` waypoints are
+exported as plain waypoints with no camera trigger command: trigger
+distances and camera setup are outside the planner model, and the exporter
+will not invent them. Fly any exported file in SITL before hardware.
 
 ### Python API
 
@@ -207,8 +234,8 @@ Ideas are welcome. Roughly in order of expected value:
   and keep-out zones alongside polygons.
 - **Battery realism**: discharge curves, Peukert effect, temperature
   derating.
-- **Exporters**: MAVLink mission files, QGroundControl .plan format, and
-  KML for map tools.
+- **Exporters**: QGC `.plan` JSON format and KML for map tools, alongside
+  the QGC WPL 110 `.waypoints` exporter added in 1.1.0.
 
 If you build one of these, open an issue or a pull request. Design notes
 in the PR description are appreciated: what assumption changed, and what
@@ -218,7 +245,7 @@ it did to the verdict for the reference mission.
 
 ```text
 src/drone_mission_planner/   the package (geo, mission, geofence,
-                             energy, report, cli)
+                             energy, report, export, cli)
 tests/                       pytest suite, reference checks included
 examples/                    the Dhaka survey mission as JSON, plus a
                              runnable script that reports on it

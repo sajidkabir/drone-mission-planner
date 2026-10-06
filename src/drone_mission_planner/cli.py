@@ -1,6 +1,7 @@
 """Command-line interface.
 
     mission-planner check mission.json   print the feasibility report
+    mission-planner export mission.json  write a QGC .waypoints file
     mission-planner demo                 run the bundled Dhaka survey demo
 
 A mission file is JSON: a "waypoints" list plus optional "aircraft" and
@@ -17,6 +18,7 @@ import sys
 from pathlib import Path
 
 from .energy import AircraftSpec
+from .export import write_qgc_wpl
 from .geofence import Geofence
 from .mission import Mission
 from .report import build_report
@@ -86,6 +88,23 @@ def main(argv: list[str] | None = None) -> int:
         help="battery reserve fraction kept unused (default 0.20)",
     )
 
+    export = sub.add_parser(
+        "export", help="export a mission file to a flight-stack format"
+    )
+    export.add_argument("path", help="path to the mission JSON file")
+    export.add_argument(
+        "--format",
+        choices=["mavlink"],
+        default="mavlink",
+        help="export format (default: mavlink, a QGC WPL 110 .waypoints file)",
+    )
+    export.add_argument(
+        "-o",
+        "--output",
+        default=None,
+        help="output file (default: <mission-stem>.waypoints)",
+    )
+
     args = parser.parse_args(argv)
 
     if args.command == "check":
@@ -95,6 +114,22 @@ def main(argv: list[str] | None = None) -> int:
             print(f"error: could not load mission file: {exc}", file=sys.stderr)
             return 2
         print(build_report(mission, geofence, aircraft, reserve_fraction=args.reserve))
+        return 0
+
+    if args.command == "export":
+        try:
+            mission, _, _ = load_plan(args.path)
+        except (OSError, json.JSONDecodeError, KeyError, ValueError) as exc:
+            print(f"error: could not load mission file: {exc}", file=sys.stderr)
+            return 2
+        output = args.output or (str(Path(args.path).with_suffix("")) + ".waypoints")
+        try:
+            target = write_qgc_wpl(mission, output)
+        except ValueError as exc:
+            print(f"error: could not export mission: {exc}", file=sys.stderr)
+            return 2
+        items = len(mission.waypoints) + 3  # home, takeoff, land
+        print(f"wrote {items} mission items to {target}")
         return 0
 
     if args.command == "demo":

@@ -17,12 +17,13 @@ from .energy import (
     cruise_power_w,
     hover_power_w,
 )
+from .export import to_qgc_wpl, write_qgc_wpl
 from .geo import destination_point, haversine_m, initial_bearing_deg
 from .geofence import Geofence, GeofenceViolation, point_in_polygon
 from .mission import Leg, Mission, Waypoint
 from .report import build_report
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 __all__ = [
     "AircraftSpec",
@@ -45,4 +46,6 @@ __all__ = [
     "hover_power_w",
     "initial_bearing_deg",
     "point_in_polygon",
+    "to_qgc_wpl",
+    "write_qgc_wpl",
 ]

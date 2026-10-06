@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "drone-mission-planner"
-version = "1.0.0"
+version = "1.1.0"
 description = "Multirotor mission planner: leg computation, polygon geofence checks, and energy feasibility with reserve margins"
 readme = "README.md"
 license = { text = "MIT" }
